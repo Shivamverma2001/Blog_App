@@ -9,5 +9,7 @@ public interface PostService {
 
     public List<Post> getPosts();
 
-    public Post createPost(Post post);
+    public void createPost(Post post);
+
+    public void updatePost(Post post);
 }

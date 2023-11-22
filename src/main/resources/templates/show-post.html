@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmins:th="http:www.thymeleaf.org" xmlns:xmins="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Page</title>
+    <style>
+        div{
+        width: 1300px;
+        margin: auto;
+        }
+
+        h1{
+        text-align: center;
+        font-size: 50px;
+        }
+
+        span{
+        font-size: 30px;
+        display: block;
+        text-align: center;
+        }
+
+        #post-content{
+        font-size: 40px;
+        }
+        input[type=submit]{
+        font-size:30px;
+        }
+
+    </style>
+</head>
+<body>
+
+<form th:action="@{/posts/edit/{postId}(postId=${post.id})}" th:method="GET">
+    <input type="submit" value="Edit Post">
+</form>
+
+<div >
+    <h1 th:text="${post.title}"/>
+    <span th:text="${post.author + ' ' + post.createdAt}"/> <hr>
+    <p id="post-content" th:text="${post.content}"/><hr>
+    <h4  th:each="tag: ${post.tags}" th:text="${tag.name}"/>
+    <h3>Comments</h3>
+</div>
+
+<div  th:each="comment: ${post.comments}" >
+    Name: <p th:text="${comment.name}"/>
+    Email: <p th:text="${comment.email}"/>
+    Comment: <p th:text="${comment.comment}"/>
+    <hr>
+</div>
+
+<div class="comment">
+    <form th:action="@{/comments/{postId}(postId=${post.id})}" th:object="${myComment}" method="POST">
+        <input type="text" placeholder="Name" th:field="*{name}">
+        <input type="text" placeholder="Email" th:field="*{email}">
+        <input type="text" placeholder="Comment" th:field="*{comment}">
+        <input type="submit" value="Add Comment">
+    </form>
+
+</div>
+
+</body>
+</html>

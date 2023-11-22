@@ -33,6 +33,7 @@ public class Post {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @NotEmpty(message = "Author could not be empty")
     @Column(name = "author")
     private String author;
 
@@ -54,7 +55,8 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "post_id"),

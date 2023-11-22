@@ -30,7 +30,7 @@ public class Tag {
     @UpdateTimestamp
     private Date updatedAt;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "tag_id"),

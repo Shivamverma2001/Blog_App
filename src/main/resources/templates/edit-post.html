@@ -35,7 +35,7 @@
 <body>
 <h1>My Blog Application</h1>
 
-<form th:action="@{/processPost}" th:object="${post}" method="POST">
+<form th:action="@{/posts/edit/{postId}(postId=${post.id})}" th:object="${post}" method="POST">
 
     <input id="title" type="text" th:field="*{title}" placeholder="Title"> <br>
     <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
@@ -46,12 +46,12 @@
     <input id="author" type="text" th:field="*{author}" placeholder="Author"><br>
     <p th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></p>
 
-    <input type="text" placeholder="Enter comma separated tags" name="tagNames" ><br>
+    <input type="text" placeholder="Enter comma separated tags" name="tagNames" th:value="${tagValues}" ><br>
 
     <textarea id="content" type="text" th:field="*{content}" placeholder="Content"> </textarea> <br>
     <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
 
-    <input type="submit" value="Publish">
+    <input type="submit" value="Submit">
 </form>
 
 </body>
