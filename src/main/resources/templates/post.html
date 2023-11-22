@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmins:th="http:www.thymeleaf.org" xmlns:xmins="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Page</title>
+    <style>
+        input[type=text]{
+            height: 40px;
+            width: 1300px;
+            margin: 20px;
+            border: 2px solid black;
+            font-size: 30px;
+        }
+        input[type=submit] {
+            margin: 20px;
+            height: 40px;
+            width: 150px;
+            color: Black;
+            font-size: 30px;
+        }
+        #content{
+            height: 400px;
+            width: 1300px;
+            margin: 20px;
+            border: 2px solid black;
+            font-size: 30px;
+        }
+        form{
+            margin: auto;
+            width: 1300px;
+        }
+
+    </style>
+</head>
+<body>
+<h1>My Blog Application</h1>
+
+<form th:action="@{/processPost}" th:object="${post}" method="POST">
+
+    <input id="title" type="text" th:field="*{title}" placeholder="Title"> <br>
+    <input id="excerpt" type="text" th:field="*{excerpt}" placeholder="Excerpt"><br>
+    <input id="author" type="text" th:field="*{author}" placeholder="Author"><br>
+<!--    <input type="text" placeholder="Enter comma separated tags" name="tagName" ><br>-->
+    <textarea id="content" type="text" th:field="*{content}" placeholder="Content"> </textarea> <br>
+
+    <input type="submit" value="Publish">
+</form>
+</body>
+</html>
