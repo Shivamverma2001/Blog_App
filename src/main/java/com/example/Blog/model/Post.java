@@ -52,11 +52,10 @@ public class Post {
     @UpdateTimestamp
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,
-            CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToMany
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "post_id"),

@@ -19,7 +19,7 @@ public class Tag {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "created_at", updatable = false)
@@ -30,7 +30,7 @@ public class Tag {
     @UpdateTimestamp
     private Date updatedAt;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "tag_id"),
@@ -42,5 +42,10 @@ public class Tag {
     }
     public Tag(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
     }
 }

@@ -15,7 +15,7 @@
         font-size: 50px;
         }
 
-        span{
+        #author-date{
         font-size: 30px;
         display: block;
         text-align: center;
@@ -25,7 +25,9 @@
         font-size: 40px;
         }
         input[type=submit]{
-        font-size:30px;
+            height: 35px;
+            width: 140px;
+            font-size:20px;
         }
 
     </style>
@@ -36,26 +38,45 @@
     <input type="submit" value="Edit Post">
 </form>
 
+<form th:action="@{/posts/delete/{postId}(postId=${post.id})}" th:method="GET">
+    <input type="submit" value="Delete Post">
+</form>
+
 <div >
-    <h1 th:text="${post.title}"/>
-    <span th:text="${post.author + ' ' + post.createdAt}"/> <hr>
-    <p id="post-content" th:text="${post.content}"/><hr>
-    <h4  th:each="tag: ${post.tags}" th:text="${tag.name}"/>
+    <h1 th:text="${post.title}"></h1>
+    <span id="author-date" th:text="${post.author + ' ' + post.createdAt}"></span> <hr>
+    <p id="post-content" th:text="${post.content}"></p><hr>
+    <h4  th:each="tag: ${post.tags}" th:text="${tag.name}"></h4>
     <h3>Comments</h3>
 </div>
 
 <div  th:each="comment: ${post.comments}" >
-    Name: <p th:text="${comment.name}"/>
-    Email: <p th:text="${comment.email}"/>
-    Comment: <p th:text="${comment.comment}"/>
+    <p>Name: <span th:text="${comment.name}" /></p>
+    <p>Email: <span th:text="${comment.email}"/></p>
+    <p>Comment: <span th:text="${comment.comment}"/></p>
+
+    <div style="display: flex; gap: 10px;">
+        <form th:action="@{/comments/edit/{commentId}(commentId=${comment.id})}" th:method="GET">
+            <input type="submit" value="Edit">
+        </form>
+
+        <form th:action="@{/comments/delete/{commentId}(commentId=${comment.id})}" th:method="GET">
+            <input type="submit" value="Delete">
+        </form>
+    </div>
+
     <hr>
+
 </div>
 
 <div class="comment">
     <form th:action="@{/comments/{postId}(postId=${post.id})}" th:object="${myComment}" method="POST">
         <input type="text" placeholder="Name" th:field="*{name}">
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
         <input type="text" placeholder="Email" th:field="*{email}">
+        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
         <input type="text" placeholder="Comment" th:field="*{comment}">
+        <p th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></p>
         <input type="submit" value="Add Comment">
     </form>
 

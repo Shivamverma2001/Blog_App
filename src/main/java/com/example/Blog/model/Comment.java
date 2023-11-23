@@ -1,6 +1,7 @@
 package com.example.Blog.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,16 +23,19 @@ public class Comment {
     @Column(name = "id")
     private Integer id;
 
+    @NotEmpty(message = "Name could not be empty")
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotEmpty(message = "Email could not be empty")
     @Column(name = "email", nullable = false)
     private String email;
 
+    @NotEmpty(message = "Comment could not be empty")
     @Column(name = "comment", nullable = false)
     private String comment;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "post")
     private Post post;
 

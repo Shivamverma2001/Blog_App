@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmins:th="http:www.thymeleaf.org" xmlns:xmins="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Page</title>
+
+</head>
+<body>
+<h1>My Blog Application</h1>
+
+<form th:action="@{/comments/edit/{commentId}(commentId=${editingComment.id})}" th:object="${editingComment}" method="POST">
+
+    <input id="name" type="text" th:field="*{name}" placeholder="Name"> <br>
+    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+    <input id="email" type="text" th:field="*{email}" placeholder="Email"><br>
+    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+    <input id="comment" type="text" th:field="*{comment}" placeholder="Comment"><br>
+    <p th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></p>
+
+    <input type="submit" value="Save Change">
+</form>
+</body>
+</html>
