@@ -6,10 +6,13 @@ import com.example.Blog.repository.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -65,9 +68,26 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> findPaginated(Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
-        return this.postRepository.findAll(pageable);
+    public Page<Post> findPaginated(Model model, Integer pageNumber, String field, String direction) {
+        Pageable pageable = PageRequest.of(pageNumber-1, 8);
+        Page<Post> page;
+
+        if (field==null && direction==null) {
+            page = postRepository.findAll(pageable);
+        } else if (direction.equals("asc")) {
+            page = postRepository.findAllByOrderByPublishedAtAsc(pageable);
+        } else {
+            page = postRepository.findAllByOrderByPublishedAtDesc(pageable);
+        }
+
+        model.addAttribute("posts", page.getContent());
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalPosts", page.getTotalElements());
+        model.addAttribute("field", field);
+        model.addAttribute("direction", direction);
+
+        return page;
     }
 
 

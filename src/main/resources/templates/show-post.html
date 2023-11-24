@@ -44,7 +44,7 @@
 
 <div >
     <h1 th:text="${post.title}"></h1>
-    <span id="author-date" th:text="${post.author + ' ' + post.createdAt}"></span> <hr>
+    <span id="author-date" th:text="${post.author + ' ' + post.publishedAt}"></span> <hr>
     <p id="post-content" th:text="${post.content}"></p><hr>
     <h4  th:each="tag: ${post.tags}" th:text="${tag.name}"></h4>
     <h3>Comments</h3>

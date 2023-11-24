@@ -23,11 +23,13 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public String getPost(Model model) {
-//        List<Post> posts = postService.getPosts();
-//        model.addAttribute("posts", posts);
-//        return "show-posts";
-        return findPaginatedPost(2, model);
+    public String getPost(
+            Model model,
+            @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
+            @RequestParam(value = "field", required = false) String field,
+            @RequestParam(value = "direction", required = false) String direction) {
+        postService.findPaginated(model, pageNumber, field, direction);
+        return "show-posts";
     }
 
     @GetMapping("/posts/{postId}")
@@ -101,18 +103,6 @@ public class PostController {
     public String searchPost(@RequestParam("keyword") String keyword, Model model) {
         List<Post> posts = postService.getPostsBySearch(keyword);
         model.addAttribute("posts", posts);
-        return "show-posts";
-    }
-
-    @GetMapping("/posts/paginated")
-    public String findPaginatedPost(@RequestParam("pageNumber") Integer pageNumber, Model model) {
-        Page<Post> page = postService.findPaginated(pageNumber, 4);
-        List<Post> posts = page.getContent();
-        model.addAttribute("posts", posts);
-        model.addAttribute("currentPage",pageNumber);
-        model.addAttribute("totalPages",page.getTotalPages());
-        model.addAttribute("totalPosts",page.getTotalElements());
-
         return "show-posts";
     }
 

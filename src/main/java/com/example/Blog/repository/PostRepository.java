@@ -1,6 +1,8 @@
 package com.example.Blog.repository;
 
 import com.example.Blog.model.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +17,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "p.author LIKE %:keyword% OR " +
             "t.name LIKE %:keyword%")
     List<Post> searchByKeyword(@Param("keyword") String keyword);
+
+    public Page<Post> findAllByOrderByPublishedAtAsc(Pageable pageable);
+
+    public Page<Post> findAllByOrderByPublishedAtDesc(Pageable pageable);
 }
