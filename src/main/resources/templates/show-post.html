@@ -42,6 +42,10 @@
     <input type="submit" value="Delete Post">
 </form>
 
+<form th:action="@{/posts}" method="GET">
+    <input type="submit" value="All Posts">
+</form>
+
 <div >
     <h1 th:text="${post.title}"></h1>
     <span id="author-date" th:text="${post.author + ' ' + post.publishedAt}"></span> <hr>

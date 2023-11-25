@@ -12,7 +12,9 @@ import java.util.*;
 @Service
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
-    public final TagService tagService;
+    private final TagService tagService;
+    private final static Integer pageSize = 6;
+
 
     public PostServiceImpl(PostRepository postRepository, TagService tagService) {
         this.postRepository = postRepository;
@@ -59,15 +61,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<Post> findPaginated(Model model, Integer pageNumber, String field, String direction) {
-        Pageable pageable = PageRequest.of(pageNumber-1, 4);
+        Pageable pageable = PageRequest.of(pageNumber-1, PostServiceImpl.pageSize);
         Page<Post> page;
 
-        if (field==null && direction==null) {
-            page = postRepository.findAll(pageable);
-        } else if (direction.equals("asc")) {
+        if (field != null && field.equals("publishedAt") && direction.equals("asc")) {
             page = postRepository.findAllByOrderByPublishedAtAsc(pageable);
-        } else {
+        } else if (field != null && field.equals("publishedAt") && direction.equals("desc")) {
             page = postRepository.findAllByOrderByPublishedAtDesc(pageable);
+        } else {
+            page = postRepository.findAll(pageable);
         }
 
         model.addAttribute("posts", page.getContent());
@@ -82,25 +84,18 @@ public class PostServiceImpl implements PostService {
 
     public Page<Post> getPaginatedFilteredPosts(Model model, Integer pageNumber, String field, String direction,
                                                 String authors, String tags) {
-        if (authors.isEmpty()) {
-            authors = null;
-        }
-
-        if (tags.isEmpty()) {
-            tags = null;
-        }
 
         List<String> authorList = null;
         List<String> tagList = null;
 
-        if (authors != null) {
+        if (authors != null && !authors.isEmpty()) {
             authorList = new ArrayList<>();
             for(String author: authors.split(",")) {
                 authorList.add(author.trim());
             }
         }
 
-        if (tags != null) {
+        if (tags != null && !tags.isEmpty()) {
             tagList = new ArrayList<>();
             for(String tagName: tags.split(",")) {
                 tagList.add(tagName.trim().toLowerCase());
@@ -116,26 +111,26 @@ public class PostServiceImpl implements PostService {
             filteredPosts = postRepository.filterAndSortByAuthorTagPublishedAtDesc(authorList, tagList);
         }
 
-        int startItem = (pageNumber-1) * 4;
+        int startItem = (pageNumber-1) * PostServiceImpl.pageSize;
         List<Post> pagedPosts;
 
         if (filteredPosts.size() < startItem) {
             pagedPosts = Collections.emptyList();
         } else {
-            int toIndex = Math.min(startItem + 4, filteredPosts.size());
+            int toIndex = Math.min(startItem + PostServiceImpl.pageSize, filteredPosts.size());
             pagedPosts = filteredPosts.subList(startItem, toIndex);
         }
 
         model.addAttribute("posts", pagedPosts);
         model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("totalPages", Math.ceil((double)filteredPosts.size()/4));
+        model.addAttribute("totalPages", Math.ceil((double)filteredPosts.size()/PostServiceImpl.pageSize));
         model.addAttribute("totalPosts", filteredPosts.size());
         model.addAttribute("field", field);
         model.addAttribute("direction", direction);
         model.addAttribute("authors", authors);
         model.addAttribute("tags", tags);
 
-        return new PageImpl<>(pagedPosts, PageRequest.of(pageNumber, 4), filteredPosts.size());
+        return new PageImpl<>(pagedPosts, PageRequest.of(pageNumber, PostServiceImpl.pageSize), filteredPosts.size());
     }
 
 

@@ -60,7 +60,6 @@
 
 <div class="main">
     <div id="each-post" th:each="post: ${posts}" >
-        <h3 th:text="${post.id}"/>
         <h1 th:text="${post.title}"/>
         <h4 th:text="${post.author + ' ' + post.publishedAt}"/>
         <p th:text="${post.excerpt}"/>
@@ -73,28 +72,27 @@
         <li th:if="${currentPage > 1}" style="display: inline-block;">
             <a th:with="prevPage=${currentPage - 1}, direction=${direction}, field=${field}"
                th:href="@{'/posts?pageNumber=' + ${prevPage} + '&amp;direction=' + ${direction} +
-                '&amp;field=' + ${field}}">
+                '&amp;field=' + ${field}+ '&amp;authors=' + ${authors}}">
                 Previous</a>
         </li>
 
         <li th:each="pageNumber : ${totalPages != null ? #numbers.sequence(1, totalPages) : {}}"
             style="display: inline-block;">
             <a th:href="@{'/posts?pageNumber=' + ${pageNumber} + '&amp;direction=' + ${direction} +
-            '&amp;field=' + ${field}}"
+            '&amp;field=' + ${field}+ '&amp;authors=' + ${authors}}"
                th:text="${pageNumber}"></a>
         </li>
 
         <li th:if="${currentPage < totalPages}" style="display: inline-block;">
             <a th:with="nextPage=${currentPage + 1}, direction=${direction}, field=${field}"
                th:href="@{'/posts?pageNumber=' + ${nextPage} + '&amp;direction=' + ${direction} +
-                '&amp;field=' + ${field}}">
+                '&amp;field=' + ${field} + '&amp;authors=' + ${authors}}">
                 Next
             </a>
 
         </li>
     </ul>
 </div>
-<h1 th:text="${totalPosts}"></h1>
-
+Total Post: <h1 th:text="${totalPosts}"></h1>
 </body>
 </html>
