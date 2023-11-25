@@ -6,7 +6,6 @@ import com.example.Blog.model.Tag;
 import com.example.Blog.service.PostService;
 import com.example.Blog.service.TagService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,8 +26,16 @@ public class PostController {
             Model model,
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
             @RequestParam(value = "field", required = false) String field,
-            @RequestParam(value = "direction", required = false) String direction) {
-        postService.findPaginated(model, pageNumber, field, direction);
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            @RequestParam(value = "authors", required = false) String authors,
+            @RequestParam(value = "tags", required = false) String tags) {
+
+        if (authors == null && tags == null) {
+            postService.findPaginated(model, pageNumber, field, direction);
+        } else {
+            postService.getPaginatedFilteredPosts(model, pageNumber, field, direction, authors, tags);
+        }
+
         return "show-posts";
     }
 
@@ -97,13 +104,6 @@ public class PostController {
     public String deletePost(@PathVariable("postId") Integer postId) {
         postService.deletePostById(postId);
         return "redirect:/posts";
-    }
-
-    @GetMapping("/posts/search")
-    public String searchPost(@RequestParam("keyword") String keyword, Model model) {
-        List<Post> posts = postService.getPostsBySearch(keyword);
-        model.addAttribute("posts", posts);
-        return "show-posts";
     }
 
 }

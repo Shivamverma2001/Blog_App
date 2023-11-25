@@ -13,10 +13,10 @@
             margin: auto;
         }
         #each-post {
-        border: 2px solid black;
-        margin-top: 10px;
-        padding-left: 8px;
-        padding-right: 8px;
+            border: 2px solid black;
+            margin-top: 10px;
+            padding-left: 8px;
+            padding-right: 8px;
         }
 
     </style>
@@ -33,7 +33,7 @@
 </form>
 
 <!-- sorting by publishedAt button -->
-<form th:action="@{/posts}" method="get">
+<form th:action="@{/posts}" method="GET">
     <input type="hidden" name="pageNumber" value="1" />
     <input type="hidden" name="field" value="publishedAt" />
     <input type="hidden" name="direction" th:value="${direction == 'asc' ? 'desc' : 'asc'}" />
@@ -42,6 +42,18 @@
         Sort by Published Date: <span th:if="${direction == 'asc'}">Descending</span>
         <span th:if="${direction == 'desc'}">Ascending</span>
     </button>
+</form>
+
+<form th:action="@{/posts}" method="GET">
+    <input placeholder="add authors separated by ','" name="authors">
+    <input placeholder="add tags separated by ','" name="tags">
+    <input type="hidden" name="field" value="publishedAt">
+    <input placeholder="sort by publishedAt" name="direction">
+    <input type="submit" value="Apply">
+</form>
+
+<form th:action="@{/posts}" method="GET">
+    <input type="submit" value="Reset">
 </form>
 
 
@@ -82,6 +94,7 @@
         </li>
     </ul>
 </div>
+<h1 th:text="${totalPosts}"></h1>
 
 </body>
 </html>

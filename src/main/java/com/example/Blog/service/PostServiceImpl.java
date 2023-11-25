@@ -3,16 +3,11 @@ package com.example.Blog.service;
 import com.example.Blog.model.Post;
 import com.example.Blog.model.Tag;
 import com.example.Blog.repository.PostRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -63,13 +58,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsBySearch(String keyword) {
-        return this.postRepository.searchByKeyword(keyword);
-    }
-
-    @Override
     public Page<Post> findPaginated(Model model, Integer pageNumber, String field, String direction) {
-        Pageable pageable = PageRequest.of(pageNumber-1, 8);
+        Pageable pageable = PageRequest.of(pageNumber-1, 4);
         Page<Post> page;
 
         if (field==null && direction==null) {
@@ -88,6 +78,64 @@ public class PostServiceImpl implements PostService {
         model.addAttribute("direction", direction);
 
         return page;
+    }
+
+    public Page<Post> getPaginatedFilteredPosts(Model model, Integer pageNumber, String field, String direction,
+                                                String authors, String tags) {
+        if (authors.isEmpty()) {
+            authors = null;
+        }
+
+        if (tags.isEmpty()) {
+            tags = null;
+        }
+
+        List<String> authorList = null;
+        List<String> tagList = null;
+
+        if (authors != null) {
+            authorList = new ArrayList<>();
+            for(String author: authors.split(",")) {
+                authorList.add(author.trim());
+            }
+        }
+
+        if (tags != null) {
+            tagList = new ArrayList<>();
+            for(String tagName: tags.split(",")) {
+                tagList.add(tagName.trim().toLowerCase());
+            }
+        }
+
+        List<Post> filteredPosts;
+        if (field == null) {
+            filteredPosts = postRepository.filterByAuthorTag(authorList, tagList);
+        } else if (direction.equals("asc")) {
+            filteredPosts = postRepository.filterAndSortByAuthorTagPublishedAtAsc(authorList, tagList);
+        } else {
+            filteredPosts = postRepository.filterAndSortByAuthorTagPublishedAtDesc(authorList, tagList);
+        }
+
+        int startItem = (pageNumber-1) * 4;
+        List<Post> pagedPosts;
+
+        if (filteredPosts.size() < startItem) {
+            pagedPosts = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + 4, filteredPosts.size());
+            pagedPosts = filteredPosts.subList(startItem, toIndex);
+        }
+
+        model.addAttribute("posts", pagedPosts);
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("totalPages", Math.ceil((double)filteredPosts.size()/4));
+        model.addAttribute("totalPosts", filteredPosts.size());
+        model.addAttribute("field", field);
+        model.addAttribute("direction", direction);
+        model.addAttribute("authors", authors);
+        model.addAttribute("tags", tags);
+
+        return new PageImpl<>(pagedPosts, PageRequest.of(pageNumber, 4), filteredPosts.size());
     }
 
 

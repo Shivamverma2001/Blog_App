@@ -16,9 +16,9 @@ public interface PostService {
 
     public void deletePostById(Integer id);
 
-    public List<Post> getPostsBySearch(String keyword);
-
     public Page<Post> findPaginated(Model model, Integer pageNumber, String field, String direction);
 
+    public Page<Post> getPaginatedFilteredPosts(Model model, Integer pageNumber, String field, String direction,
+                              String authors, String tags);
 
 }
