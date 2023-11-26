@@ -29,7 +29,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post savePost(Post post, String tagNames) {
         post.getTags().clear();
-        HashSet<String> uniqueTagNames = new HashSet<>();
+        Set<String> uniqueTagNames = new HashSet<>();
 
         for(String tagName: tagNames.split(",")) {
             uniqueTagNames.add(tagName.trim().toLowerCase());

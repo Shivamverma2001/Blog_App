@@ -1,7 +1,9 @@
 package com.example.Blog.service;
 
 import com.example.Blog.model.Comment;
+import com.example.Blog.model.Post;
 import com.example.Blog.repository.CommentRepository;
+import com.example.Blog.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,8 +30,12 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Comment update(Comment comment) {
+    public Comment update(Integer commentId, Comment comment) {
+        Post post = this.findCommentById(commentId).getPost();
+        comment.setId(commentId);
+        comment.setPost(post);
         Comment updatedComment = commentRepository.save(comment);
+
         return updatedComment;
 
     }

@@ -39,14 +39,17 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public String getPost(@PathVariable("postId") Integer postId, Model model) {
         Post post = postService.getPost(postId);
+
         model.addAttribute("post", post);
         model.addAttribute("myComment", new Comment());
+
         return "show-post";
     }
 
     @PostMapping("/posts")
     public String createPost(Model model) {
         model.addAttribute("post", new Post());
+
         return "post";
     }
 
@@ -60,6 +63,7 @@ public class PostController {
         }
 
         postService.savePost(post, tagNames);
+
         return "redirect:/posts";
     }
 
@@ -79,6 +83,7 @@ public class PostController {
 
         model.addAttribute("tagValues", tagValuesBuilder.toString());
         model.addAttribute("post", postToBeEdited);
+
         return "edit-post";
     }
 
@@ -100,6 +105,7 @@ public class PostController {
     @GetMapping("/posts/delete/{postId}")
     public String deletePost(@PathVariable("postId") Integer postId) {
         postService.deletePostById(postId);
+
         return "redirect:/posts";
     }
 

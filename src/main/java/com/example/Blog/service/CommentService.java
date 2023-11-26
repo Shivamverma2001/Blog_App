@@ -9,5 +9,5 @@ public interface CommentService {
 
     public void deleteById(Integer id);
 
-    public Comment update(Comment comment);
+    public Comment update(Integer commentId, Comment comment);
 }

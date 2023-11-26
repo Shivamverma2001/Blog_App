@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -36,7 +36,7 @@ public class Tag {
             joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id")
     )
-    private List<Post> posts;
+    private Set<Post> posts;
 
     public Tag() {
     }

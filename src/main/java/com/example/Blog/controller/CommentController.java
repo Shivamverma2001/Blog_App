@@ -24,11 +24,8 @@ public class CommentController {
     }
 
     @PostMapping("/comments/{postId}")
-    public String addComment(
-            @PathVariable("postId") Integer postId,
-            @Valid @ModelAttribute("myComment") Comment myComment,
-            BindingResult bindingResult,
-            Model model) {
+    public String addComment(Model model, @PathVariable("postId") Integer postId,
+            @Valid @ModelAttribute("myComment") Comment myComment, BindingResult bindingResult) {
         Post post = postService.getPost(postId);
         model.addAttribute("post", postService.getPost(postId));
 
@@ -47,23 +44,24 @@ public class CommentController {
     public String updateComment(@PathVariable("commentId") Integer commentId, Model model) {
         Comment editingComment = commentService.findCommentById(commentId);
         model.addAttribute("editingComment", editingComment);
+
         return "edit-comment";
     }
 
     @PostMapping("/comments/edit/{commentId}")
-    public String updateComment(
-            @PathVariable("commentId") Integer commentId,
-            @Valid @ModelAttribute("editingComment") Comment editingComment,
-            BindingResult bindingResult, Model model) {
+    public String updateComment(Model model, @PathVariable("commentId") Integer commentId,
+            @Valid @ModelAttribute("editingComment") Comment editingComment, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             editingComment.setId(commentId);
             model.addAttribute("editingComment", editingComment);
             return "edit-comment";
         }
-        Post post = commentService.findCommentById(commentId).getPost();        editingComment.setId(commentId);
-        editingComment.setPost(post);
-        Comment updatedComment = commentService.update(editingComment);
+
+        Post post = commentService.findCommentById(commentId).getPost();
+        Comment updatedComment = commentService.update(commentId, editingComment);
         model.addAttribute("post", post);
+
         return "redirect:/posts/"+post.getId();
     }
 
@@ -71,6 +69,7 @@ public class CommentController {
     public String deleteComment(@PathVariable("commentId") Integer commentId, Model model) {
         Post post = commentService.findCommentById(commentId).getPost();
         commentService.deleteById(commentId);
+
         return "redirect:/posts/"+post.getId();
     }
 }
