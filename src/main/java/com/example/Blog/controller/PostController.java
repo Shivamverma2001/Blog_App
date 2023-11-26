@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
+
 @Controller
 public class PostController {
     private final PostService postService;
@@ -27,16 +28,10 @@ public class PostController {
             @RequestParam(value = "field", required = false) String field,
             @RequestParam(value = "direction", defaultValue = "asc") String direction,
             @RequestParam(value = "authors", required = false) String authors,
-            @RequestParam(value = "tags", required = false) String tags) {
+            @RequestParam(value = "tags", required = false) String tags,
+            @RequestParam(value = "search", required = false) String search) {
 
-        if ((authors == null || authors.isEmpty() || authors.equals("null")) &&
-                (tags == null || tags.isEmpty() || tags.equals("null"))) {
-
-            postService.findPaginated(model, pageNumber, field, direction);
-        } else {
-
-            postService.getPaginatedFilteredPosts(model, pageNumber, field, direction, authors, tags);
-        }
+        postService.getPosts(model, pageNumber, field, direction, authors, tags, search);
 
         return "show-posts";
     }

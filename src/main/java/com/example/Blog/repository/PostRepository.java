@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -32,5 +33,14 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "where (:authors is null or p.author in :authors) " +
             "AND (:tags IS NULL OR EXISTS (SELECT tg.name FROM p.tags tg WHERE tg.name IN :tags)) ")
     public List<Post> filterByAuthorTag(List<String> authors, List<String> tags);
+
+
+    @Query("SELECT DISTINCT p FROM Post p " +
+            "LEFT JOIN p.tags t " +
+            "WHERE p.title LIKE %:keyword% OR " +
+            "p.content LIKE %:keyword% OR " +
+            "p.author LIKE %:keyword% OR " +
+            "t.name LIKE %:keyword%")
+    Page<Post> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 }

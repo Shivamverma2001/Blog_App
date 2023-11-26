@@ -10,13 +10,12 @@ import java.util.Optional;
 public interface PostService {
     public Post getPost(Integer postId);
 
-    public List<Post> getPosts();
+    public Page<Post> getPosts(Model model, Integer pageNumber, String field, String direction,
+                               String authors, String tags, String search);
 
     public Post savePost(Post post, String tagNames);
 
     public void deletePostById(Integer id);
-
-    public Page<Post> findPaginated(Model model, Integer pageNumber, String field, String direction);
 
     public Page<Post> getPaginatedFilteredPosts(Model model, Integer pageNumber, String field, String direction,
                               String authors, String tags);

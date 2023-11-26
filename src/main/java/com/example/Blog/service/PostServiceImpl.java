@@ -27,11 +27,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts() {
-        return this.postRepository.findAll();
-    }
-
-    @Override
     public Post savePost(Post post, String tagNames) {
         post.getTags().clear();
         HashSet<String> uniqueTagNames = new HashSet<>();
@@ -57,29 +52,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePostById(Integer id) {
         this.postRepository.deleteById(id);
-    }
-
-    @Override
-    public Page<Post> findPaginated(Model model, Integer pageNumber, String field, String direction) {
-        Pageable pageable = PageRequest.of(pageNumber-1, PostServiceImpl.pageSize);
-        Page<Post> page;
-
-        if (field != null && field.equals("publishedAt") && direction.equals("asc")) {
-            page = postRepository.findAllByOrderByPublishedAtAsc(pageable);
-        } else if (field != null && field.equals("publishedAt") && direction.equals("desc")) {
-            page = postRepository.findAllByOrderByPublishedAtDesc(pageable);
-        } else {
-            page = postRepository.findAll(pageable);
-        }
-
-        model.addAttribute("posts", page.getContent());
-        model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalPosts", page.getTotalElements());
-        model.addAttribute("field", field);
-        model.addAttribute("direction", direction);
-
-        return page;
     }
 
     public Page<Post> getPaginatedFilteredPosts(Model model, Integer pageNumber, String field, String direction,
@@ -121,17 +93,51 @@ public class PostServiceImpl implements PostService {
             pagedPosts = filteredPosts.subList(startItem, toIndex);
         }
 
-        model.addAttribute("posts", pagedPosts);
-        model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("totalPages", Math.ceil((double)filteredPosts.size()/PostServiceImpl.pageSize));
+        model.addAttribute("totalPages", (int) Math.ceil((double)filteredPosts.size()/PostServiceImpl.pageSize));
         model.addAttribute("totalPosts", filteredPosts.size());
-        model.addAttribute("field", field);
-        model.addAttribute("direction", direction);
-        model.addAttribute("authors", authors);
-        model.addAttribute("tags", tags);
 
         return new PageImpl<>(pagedPosts, PageRequest.of(pageNumber, PostServiceImpl.pageSize), filteredPosts.size());
     }
 
+    @Override
+    public Page<Post> getPosts(Model model, Integer pageNumber, String field, String direction,
+                               String authors, String tags, String search) {
+        Pageable pageable = PageRequest.of(pageNumber-1, PostServiceImpl.pageSize);
+        Page<Post> page;
+        boolean filterFlag = false;
+
+        if (search != null && !search.isEmpty() && !search.equals("null")) {
+            page = postRepository.searchByKeyword(search, pageable);
+
+        } else if ((authors != null && !authors.isEmpty() && !authors.equals("null")) ||
+                (tags != null && !tags.isEmpty() && !tags.equals("null"))) {
+            filterFlag = true;
+            page = this.getPaginatedFilteredPosts(model, pageNumber, field, direction, authors, tags);
+
+        } else if (field != null && field.equals("publishedAt") && direction.equals("asc")){
+            page = postRepository.findAllByOrderByPublishedAtAsc(pageable);
+
+        } else if (field != null && field.equals("publishedAt") && direction.equals("desc")) {
+            page = postRepository.findAllByOrderByPublishedAtDesc(pageable);
+
+        } else {
+            page = postRepository.findAll(pageable);
+        }
+
+        model.addAttribute("posts", page.getContent());
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("field", field);
+        model.addAttribute("direction", direction);
+        model.addAttribute("authors", authors);
+        model.addAttribute("tags", tags);
+        model.addAttribute("search", search);
+
+        if (!filterFlag) {
+            model.addAttribute("totalPages", page.getTotalPages());
+            model.addAttribute("totalPosts", page.getTotalElements());
+        }
+
+        return page;
+    }
 
 }
