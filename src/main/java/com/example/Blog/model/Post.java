@@ -31,9 +31,9 @@ public class Post {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @NotEmpty(message = "Author could not be empty")
-    @Column(name = "author")
-    private String author;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "user_id")
+    private User author;
 
     @Column(name = "published_at")
     @CreationTimestamp
@@ -60,6 +60,8 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags = new HashSet<>();
+
+
 
     public void addTag(Tag tag) {
         this.tags.add(tag);

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Page</title>
+
+    <style>
+        form{
+        width: 40vw;
+        margin: auto;
+        margin-top: 100px;
+        background-color: grey;
+        }
+
+        label,input{
+        width:90%;
+        height: auto;
+        margin:10px;
+        font-size: 25px;
+        font-weight: bolder;
+        }
+
+        h1{
+        font-size: 50px;
+        text-align: center;
+        }
+
+        #login-btn{
+        width: 30%;
+        background-color: green;
+        }
+
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <form th:action="@{/addUser}"  method="GET">
+        <h1>Register Here</h1>
+        <label >Username:</label> <br>
+        <input type="text" name="username" id="username" required> <br>
+
+        <label >Username:</label> <br>
+        <input type="text" name="email" id="email" required> <br>
+
+        <label >Username:</label> <br>
+        <input type="text" name="name" id="name" required> <br>
+
+        <label >Password:</label> <br>
+        <input type="password" name="password" id="password" required> <br>
+
+        <input id="login-btn" type="submit" value="Register">
+    </form>
+</div>
+
+</body>
+</html>
