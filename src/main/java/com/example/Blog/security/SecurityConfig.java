@@ -14,29 +14,37 @@ import javax.sql.DataSource;
 @Configuration
 public class SecurityConfig {
 
+    @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-        jdbcUserDetailsManager.setUsersByUsernameQuery("select username, password, is_active from users where username=?");
+
+        jdbcUserDetailsManager.setUsersByUsernameQuery("select username, password, is_active from users " +
+                "where username=?");
+
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("select u.username, r.name from users u " +
                 "join roles r on u.role_id=r.id where u.username=?");
-        return jdbcUserDetailsManager;
 
+        return jdbcUserDetailsManager;
     }
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(configure -> configure
-                        .requestMatchers("/register", "/login").permitAll()
-                        .anyRequest().authenticated()
+                .requestMatchers("/register", "/addUser", "/posts", "/posts/{postId}").permitAll()
+                .requestMatchers("/**").hasAnyRole("AUTHOR", "ADMIN")
+                .anyRequest().authenticated()
+
         ).formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/authenticateTheUser")
+                .defaultSuccessUrl("/posts")
                 .permitAll()
-                .defaultSuccessUrl("/")
+
         ).logout(logout -> logout.permitAll()
         ).exceptionHandling(configure -> configure.accessDeniedPage("/access_denied")
 
         );
+
         return http.build();
     }
 

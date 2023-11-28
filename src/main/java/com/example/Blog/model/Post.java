@@ -33,11 +33,14 @@ public class Post {
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
-    private User author;
+    private User user;
 
     @Column(name = "published_at")
     @CreationTimestamp
     private Date publishedAt;
+
+    @Column(name = "author")
+    private String author;
 
     @Column(name = "is_published")
     private Boolean isPublished = false;

@@ -23,14 +23,13 @@ public class Comment {
     @Column(name = "id")
     private Integer id;
 
+    @NotEmpty(message = "Email could not be empty")
+    @Column(name = "email", nullable = false)
+    private String email;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "user_id")
-    private User user;
-
-//    @NotEmpty(message = "Email could not be empty")
-//    @Column(name = "email", nullable = false)
-//    private String email;
+    @NotEmpty(message = "Name could not be empty")
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @NotEmpty(message = "Comment could not be empty")
     @Column(name = "comment", nullable = false)

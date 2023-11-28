@@ -4,8 +4,10 @@ import com.example.Blog.model.Comment;
 import com.example.Blog.model.Post;
 import com.example.Blog.model.Tag;
 import com.example.Blog.service.PostService;
-import com.example.Blog.service.TagService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
 
-    public PostController(PostService postService, TagService tagService) {
+    @Autowired
+    public PostController(PostService postService) {
         this.postService = postService;
     }
 
@@ -47,7 +50,7 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public String createPost(Model model) {
+    public String createPost(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("post", new Post());
 
         return "post";

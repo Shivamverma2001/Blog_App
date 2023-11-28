@@ -1,10 +1,18 @@
 package com.example.Blog.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -31,7 +39,7 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
 
@@ -40,5 +48,6 @@ public class User {
         this.email = email;
         this.name = name;
         this.password = encodedPassword;
+        this.is_active = true;
     }
 }

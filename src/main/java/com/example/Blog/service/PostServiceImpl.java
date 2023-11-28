@@ -3,6 +3,7 @@ package com.example.Blog.service;
 import com.example.Blog.model.Post;
 import com.example.Blog.model.Tag;
 import com.example.Blog.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -16,7 +17,8 @@ public class PostServiceImpl implements PostService {
     private final static Integer pageSize = 6;
 
 
-    public PostServiceImpl(PostRepository postRepository, TagService tagService) {
+    @Autowired
+    public PostServiceImpl(PostRepository postRepository, TagService tagService, UserService userService) {
         this.postRepository = postRepository;
         this.tagService = tagService;
     }
@@ -45,7 +47,6 @@ public class PostServiceImpl implements PostService {
                 post.addTag(newTag);
             }
         }
-
         return this.postRepository.save(post);
     }
 

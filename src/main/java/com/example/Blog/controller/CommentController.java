@@ -5,6 +5,7 @@ import com.example.Blog.model.Post;
 import com.example.Blog.service.CommentService;
 import com.example.Blog.service.PostService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
 
+    @Autowired
     public CommentController(CommentService commentService, PostService postService) {
         this.commentService = commentService;
         this.postService = postService;

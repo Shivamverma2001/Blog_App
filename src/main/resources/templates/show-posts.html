@@ -28,9 +28,17 @@
 </head>
 <body>
     <h1>My Blog Application</h1>
-    <form th:action="@{/posts}" method="POST">
-        <input class="button" type="submit" value="Create New Post">
-    </form>
+
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
+    <h1 th:text="${#strings.toUpperCase(#authentication.principal.username)}"></h1>
+    </span>
+
+    <span th:if="${#authorization.expression('isAuthenticated')}">
+            <form th:action="@{/posts}" method="POST">
+                <input class="button" type="submit" value="Create New Post">
+            </form>
+    </span>
+
 
     <form th:action="@{/posts}" method="GET">
         <input type="hidden" name="pageNumber" value="1">
@@ -104,6 +112,19 @@
             </li>
         </ul>
     </div>
+
+    <span th:if="${#authorization.expression('isAuthenticated')}">
+            <form th:action="@{/logout}" method="POST">
+                <input type="submit" value="Logout">
+            </form>
+    </span>
+
+    <span th:unless="${#authorization.expression('isAuthenticated')}">
+            <form th:action="@{/login}" method="POST">
+                <input type="submit" value="Login">
+            </form>
+    </span>
+
 
     <h3>Total Post: <span th:text="${totalPosts}"></span></h3>
     <h3>Total Pages: <span th:text="${totalPages}"></span></h3>

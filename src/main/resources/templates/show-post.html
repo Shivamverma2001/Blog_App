@@ -34,14 +34,18 @@
     </style>
 </head>
 <body>
+    <h1>My Blog Application</h1>
 
-    <form th:action="@{/posts/edit/{postId}(postId=${post.id})}" th:method="GET">
-        <input type="submit" value="Edit Post">
-    </form>
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
+         <form th:action="@{/posts/edit/{postId}(postId=${post.id})}" th:method="GET">
+            <input type="submit" value="Edit Post">
+        </form>
 
-    <form th:action="@{/posts/delete/{postId}(postId=${post.id})}" th:method="GET">
-        <input type="submit" value="Delete Post">
-    </form>
+        <form th:action="@{/posts/delete/{postId}(postId=${post.id})}" th:method="GET">
+            <input type="submit" value="Delete Post">
+        </form>
+    </span>
+
 
     <form th:action="@{/posts}" method="GET">
         <input type="submit" value="All Posts">
@@ -58,29 +62,34 @@
     </div>
 
     <div  th:each="comment: ${post.comments}" >
-        <p>Name: <span th:text="${comment.name}" /></p>
-        <p>Email: <span th:text="${comment.email}"/></p>
-        <p>Comment: <span th:text="${comment.comment}"/></p>
+        <p>Name: <span th:text="${comment.name}"></span></p>
+        <p>Email: <span th:text="${comment.email}"></span></p>
+        <p>Comment: <span th:text="${comment.comment}"></span></p>
 
-        <div style="display: flex; gap: 10px;">
-            <form th:action="@{/comments/edit/{commentId}(commentId=${comment.id})}" th:method="GET">
-                <input type="submit" value="Edit">
-            </form>
+         <span th:if="${#authorization.expression('isAuthenticated()')}">
+             <div style="display: flex; gap: 10px;">
+                <form th:action="@{/comments/edit/{commentId}(commentId=${comment.id})}" th:method="GET">
+                    <input type="submit" value="Edit">
+                </form>
 
-            <form th:action="@{/comments/delete/{commentId}(commentId=${comment.id})}" th:method="GET">
-                <input type="submit" value="Delete">
-            </form>
-        </div>
+                <form th:action="@{/comments/delete/{commentId}(commentId=${comment.id})}" th:method="GET">
+                    <input type="submit" value="Delete">
+                </form>
+            </div>
+        </span>
         <hr>
 
     </div>
+
 
     <div class="comment">
         <form th:action="@{/comments/{postId}(postId=${post.id})}" th:object="${myComment}" method="POST">
             <input type="text" placeholder="Name" th:field="*{name}">
             <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
             <input type="text" placeholder="Email" th:field="*{email}">
             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
             <input type="text" placeholder="Comment" th:field="*{comment}">
             <p th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></p>
             <input type="submit" value="Add Comment">

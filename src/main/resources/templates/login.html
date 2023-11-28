@@ -36,16 +36,27 @@
 
 
 <div class="form-container">
-    <form th:action="@{/login}" method="POST">
+    <form th:action="@{/authenticateTheUser}" method="POST">
         <h1>Login Page</h1>
+        <div th:if="${param.error}">
+            <i id = "wrong">Sorry! You entered invalid username/password.</i>
+        </div>
+
+        <div th:if="${param.logout}">
+            <i id = "logout">You have been logged out.</i>
+        </div>
+
         <label >UserName:</label> <br>
 
-        <input type="text" name="username" id="username" required> <br>
+        <input  type="text" name="username" id="username" required> <br>
 
         <label >Password:</label> <br>
         <input type="password" name="password" id="password" required> <br>
 
         <input id="login-btn" type="submit" value="Login">
+    </form>
+    <form th:action="@{/register}" >
+        <input type="submit" value="Register">
     </form>
 </div>
 

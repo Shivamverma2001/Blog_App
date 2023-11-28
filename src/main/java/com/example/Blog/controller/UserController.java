@@ -19,13 +19,16 @@ public class UserController {
     public String addUser(@RequestParam("username") String username, @RequestParam("email") String email,
                           @RequestParam("name") String name, @RequestParam("password") String password) {
         userService.addUser(username, email, name, password);
-        return "redirect:/posts";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
-    public String showLogin(@RequestParam("username") String username, @RequestParam("email") String email,
-                          @RequestParam("name") String name, @RequestParam("password") String password) {
-        userService.addUser(username, email, name, password);
-        return "redirect:/posts";
+    public String showLoginPage() {
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String showRegisterForm() {
+        return "register";
     }
 }
