@@ -1,4 +1,5 @@
-# MountBlue_Blog
+# BlogApp
+"An interactive and user-friendly blog application built using Java and Spring, allowing seamless content creation, sharing, and engagement."
 
 ## Description
 "Welcome to MyBlog App README:
@@ -28,3 +29,4 @@ For open source projects, say how it is licensed.
 
 ## Project status
 In Progress
+
