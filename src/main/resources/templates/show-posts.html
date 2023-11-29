@@ -113,18 +113,17 @@
         </ul>
     </div>
 
-    <span th:if="${#authorization.expression('isAuthenticated')}">
+    <span  th:if="${#authorization.expression('isAuthenticated')}">
             <form th:action="@{/logout}" method="POST">
-                <input type="submit" value="Logout">
+                <input class="button" type="submit" value="Logout">
             </form>
     </span>
 
-    <span th:unless="${#authorization.expression('isAuthenticated')}">
+    <span  th:unless="${#authorization.expression('isAuthenticated')}">
             <form th:action="@{/login}" method="POST">
-                <input type="submit" value="Login">
+                <input class="button" type="submit" value="Login">
             </form>
     </span>
-
 
     <h3>Total Post: <span th:text="${totalPosts}"></span></h3>
     <h3>Total Pages: <span th:text="${totalPages}"></span></h3>
