@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
@@ -44,7 +46,12 @@ public class CommentServiceImpl implements CommentService{
         Comment updatedComment = commentRepository.save(comment);
 
         return updatedComment;
-
     }
+
+    @Override
+    public List<Comment> getCommentOfPost(Integer postId) {
+        return commentRepository.getCommentOfPost(postId);
+    }
+
 }
 

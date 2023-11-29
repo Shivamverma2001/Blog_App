@@ -1,5 +1,6 @@
 package com.example.Blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -32,11 +33,12 @@ public class Post {
     private String content;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "published_at")
-    @CreationTimestamp
+    @UpdateTimestamp
     private Date publishedAt;
 
     @Column(name = "author")
@@ -54,6 +56,7 @@ public class Post {
     private Date updatedAt;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany
@@ -62,6 +65,7 @@ public class Post {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @JsonIgnore
     private Set<Tag> tags = new HashSet<>();
 
 

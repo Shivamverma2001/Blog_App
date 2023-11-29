@@ -51,7 +51,9 @@ public class PostController {
 
     @PostMapping("/posts")
     public String createPost(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("post", new Post());
+        Post post = new Post();
+        post.setAuthor(userDetails.getUsername());
+        model.addAttribute("post", post);
 
         return "post";
     }

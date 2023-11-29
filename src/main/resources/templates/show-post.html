@@ -37,13 +37,18 @@
     <h1>My Blog Application</h1>
 
     <span th:if="${#authorization.expression('isAuthenticated()')}">
-         <form th:action="@{/posts/edit/{postId}(postId=${post.id})}" th:method="GET">
+    <span th:if = "${#authentication.principal.username == post.author ||
+                    #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+
+        <form th:action="@{/posts/edit/{postId}(postId=${post.id})}" th:method="GET">
             <input type="submit" value="Edit Post">
         </form>
 
         <form th:action="@{/posts/delete/{postId}(postId=${post.id})}" th:method="GET">
             <input type="submit" value="Delete Post">
         </form>
+
+    </span>
     </span>
 
 
@@ -66,8 +71,11 @@
         <p>Email: <span th:text="${comment.email}"></span></p>
         <p>Comment: <span th:text="${comment.comment}"></span></p>
 
-         <span th:if="${#authorization.expression('isAuthenticated()')}">
-             <div style="display: flex; gap: 10px;">
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+        <span th:if = "${#authentication.principal.username == post.author ||
+                        #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+
+            <div style="display: flex; gap: 10px;">
                 <form th:action="@{/comments/edit/{commentId}(commentId=${comment.id})}" th:method="GET">
                     <input type="submit" value="Edit">
                 </form>
@@ -76,9 +84,10 @@
                     <input type="submit" value="Delete">
                 </form>
             </div>
+
+        </span>
         </span>
         <hr>
-
     </div>
 
 

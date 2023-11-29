@@ -2,9 +2,13 @@ package com.example.Blog.service;
 
 import com.example.Blog.model.Post;
 import com.example.Blog.model.Tag;
+import com.example.Blog.model.User;
 import com.example.Blog.repository.PostRepository;
+import com.example.Blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -14,13 +18,21 @@ import java.util.*;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
+
+    private final UserService userService;
+    private final UserRepository userRepository;
+
+
     private final static Integer pageSize = 6;
 
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, TagService tagService, UserService userService) {
+    public PostServiceImpl(PostRepository postRepository, TagService tagService,
+                           UserService userService, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.tagService = tagService;
+        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -47,6 +59,12 @@ public class PostServiceImpl implements PostService {
                 post.addTag(newTag);
             }
         }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        post.setUser(user);
+        post.setAuthor(username);
         return this.postRepository.save(post);
     }
 
